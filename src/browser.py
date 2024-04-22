@@ -1,11 +1,11 @@
-from playwright.sync_api import sync_playwright, Playwright
+from playwright.sync_api import Playwright
 
 
 class Browser:
     def __init__(self, playwright: Playwright):
         print("Starting Chromium in headless mode")
         chromium = playwright.chromium
-        self.browser = chromium.launch()
+        self.browser = chromium.launch(headless=False)
 
     def get_page_html(self, url: str):
         """Navigates to the provided URL and returns the response"""

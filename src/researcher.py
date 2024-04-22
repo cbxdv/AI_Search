@@ -18,23 +18,18 @@ class Researcher:
     def search_retrieve_content(self, query: str) -> list[RetrieverResult]:
         """Searches in google and retrieves content"""
 
-        urls = self._google_search(query)
+        urls = self.google_search(query)
         retrival_results = []
 
         for url in urls:
-            content = self._get_content(url)
+            content = self.get_content(url)
             if content is None:
                 continue
-            retrival_results.append(
-                {
-                    "url": url,
-                    "content": content,
-                }
-            )
+            retrival_results.append(content)
 
         return retrival_results
 
-    def _google_search(self, query: str) -> list[str]:
+    def google_search(self, query: str) -> list[str]:
         """Searches the web using Google and returns links for the query"""
 
         urls = []
@@ -62,7 +57,7 @@ class Researcher:
 
         return urls
 
-    def _get_content(self, url: str) -> str:
+    def get_content(self, url: str) -> RetrieverResult:
         """Returns the content in a website in a cleaned format"""
 
         blacklist = ["youtube.com"]
@@ -80,7 +75,7 @@ class Researcher:
         content = self.h2t.handle(doc.summary())
         content = content.replace("\n", " ")
 
-        return content
+        return {"url": url, "content": content}
 
     def __del__(self):
         self.h2t.close()

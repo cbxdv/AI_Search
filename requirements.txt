@@ -1,11 +1,11 @@
 beautifulsoup4==4.12.3
 chromadb==0.4.24
 gradio==4.27.0
+groq==0.5.0
 html2text==2024.2.26
 langchain==0.1.16
 lxml==5.2.1
 lxml_html_clean==0.1.1
-ollama==0.1.8
 playwright==1.43.0
 readability-lxml==0.8.1
 tiktoken==0.6.0
