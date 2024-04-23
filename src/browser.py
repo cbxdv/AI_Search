@@ -5,7 +5,7 @@ class Browser:
     def __init__(self, playwright: Playwright):
         print("Starting Chromium in headless mode")
         chromium = playwright.chromium
-        self.browser = chromium.launch(headless=False)
+        self.browser = chromium.launch(headless=True)
 
     def get_page_html(self, url: str):
         """Navigates to the provided URL and returns the response"""
