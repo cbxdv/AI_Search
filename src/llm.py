@@ -27,7 +27,7 @@ class LLM:
     def generate_summary(self, search_query: str, web_contents: list[RetrieverResult]):
         """Generate a summary for the web search results"""
         content = ""
-        for wc in web_contents[5:]:
+        for wc in web_contents[:4]:
             content += wc["content"] + "\n"
 
         prompt = f"User Query: {search_query}\nContent: {content[:5000]}"
@@ -45,7 +45,13 @@ class LLM:
             stop=None,
             top_p=1,
         )
-        return completion.choices[0].message.content
+        summary =  completion.choices[0].message.content
+
+        summary += "\n\n**Sources:**\n"
+        for wc in web_contents[:4]:
+            summary += f'- {wc['url']}\n'
+
+        return summary
 
     def build_db(self, web_contents: list[RetrieverResult]):
         """Populates the vectorstore with the given result texts"""
@@ -111,7 +117,7 @@ class LLM:
         class BinaryResponse(BaseModel):
             response: str
 
-        system_prompt = "You are an expert in finding whether the answer correctly answers a question. Based on the question and answer provided, say whether the answer is accurate, relevant and not partial. The answer should not be incomplete based on the context, if so then the answer is not relevant. Give a binary output 'yes' or 'no' for the response. The response should be JSON with a single key 'response' with value as 'yes' or 'no'. No explanation or preable. Just output the JSON."
+        system_prompt = "You are an expert in finding whether the answer correctly answers a question. Based on the question and answer provided, say whether the answer is accurate, relevant and not partial. The answer should not be incomplete based on the context, if so then the answer is not relevant. If the answer says that its not mentioned in the context, then the answer is invalid. Give a binary output 'yes' or 'no' for the response. The response should be JSON with a single key 'response' with value as 'yes' or 'no'. No explanation or preable. Just output the JSON."
 
         chat = ChatGroq(model_name="llama3-70b-8192")
         prompt = ChatPromptTemplate.from_messages(
