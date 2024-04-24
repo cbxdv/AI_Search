@@ -5,9 +5,13 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.pydantic_v1 import BaseModel
 from langchain_groq import ChatGroq
+from typing import TypedDict
 
 from src.researcher import RetrieverResult, Researcher
 
+class LLMSummary(TypedDict):
+    summary: str
+    references: str
 
 class LLM:
     def __init__(self, researcher: Researcher):
@@ -24,10 +28,10 @@ class LLM:
         self.researcher = researcher
         self.db_content_urls = []
 
-    def generate_summary(self, search_query: str, web_contents: list[RetrieverResult]):
+    def generate_summary(self, search_query: str, web_contents: list[RetrieverResult]) -> LLMSummary:
         """Generate a summary for the web search results"""
         content = ""
-        for wc in web_contents[:4]:
+        for wc in web_contents[:5]:
             content += wc["content"] + "\n"
 
         prompt = f"User Query: {search_query}\nContent: {content[:5000]}"
@@ -47,11 +51,14 @@ class LLM:
         )
         summary =  completion.choices[0].message.content
 
-        summary += "\n\n**Sources:**\n"
-        for wc in web_contents[:4]:
-            summary += f'- {wc['url']}\n'
-
-        return summary
+        references = ""
+        for wc in web_contents:
+            references += f'- {wc['url']}\n'
+            
+        return {
+            "summary": summary,
+            "references": references
+        }
 
     def build_db(self, web_contents: list[RetrieverResult]):
         """Populates the vectorstore with the given result texts"""
