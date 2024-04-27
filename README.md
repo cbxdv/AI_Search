@@ -1,4 +1,4 @@
-# AI-based Search Engine
+# [AI-based Search Engine](https://github.com/cbxdv/AI_Search/blob/main/LLM%20Powered%20Search%20Engine.pdf)
 
 An AI-based search engine that searches the internet for you and summarizes content, instead of you going through links and getting details. Provides an interface for further questions based on the content.
 
@@ -32,6 +32,3 @@ GROQ_API_KEY=<GROQ_API_KEY>
 ```shell
 python gradio_ui.py
 ```
-
-## Report
-[LLM Powered Search Engine.pdf](https://github.com/cbxdv/AI_Search/files/15139661/LLM.Powered.Search.Engine.pdf)
